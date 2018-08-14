@@ -1,3 +1,4 @@
+'use strict';
 var fs = require('fs');
 
 var helpText = `Welcome to my CLI to do list app
@@ -10,46 +11,44 @@ remove + index - removes specific item
 rest - resets whole list
 *****************************`;
 
-userInput = process.argv[2];
+console.log('Your To Do List: ');
 
-switch (userInput) {
+let input = process.argv[2];
+let item = process.argv[3]
 
-    case 'help':
-        console.log(helpText);
+const fileName = 'toDoList.json'
+
+let items
+try {
+    const rawData = fs.readFileSync(fileName, { encoding: 'UTF8' });
+    items = JSON.parse(rawData);
+} catch (e) {
+    items = [];
+}
+
+console.log(JSON.stringify(items));
+
+switch (input) {
+    case 'add':
+        items.push(item);
+        break;
+        case 'remove':
+           items.splice(item, 1)
+            console.log('you have removed one item from your list');
         break;
 
     case 'list':
-        fs.readFile("toDoList.txt", (err, data) => {
-            if (err) {
-                console.log("To do list is empty");
-            } else {
-                console.log(data);
-            }
-        });
-        break;
-
-    case 'add':
-        fs.appendFile('toDoList.txt', process.argv[3] + '\n', (err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('List Updated!');
-            }
-        });
-
-        break;
+        console.log(JSON.stringify(items))
+        return;
 
     case 'reset':
-        fs.unlink('toDoList.txt', (err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('To do list Reset');
-            }
-        });
-
+        items = []
         break;
 
+    case 'help':
     default:
         console.log(helpText);
-}
+        return;
+};
+
+fs.writeFile(fileName, JSON.stringify(items));
