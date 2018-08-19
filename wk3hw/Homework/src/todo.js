@@ -28,11 +28,17 @@ class Todo {
   read() {
     return new Promise(resolve => {
       fs.readFile(this._filename, DEFAULT_ENCODING, (error, data) => {
-        if (error){
+        if (error)
           return resolve([]);
-        } else {
-        return resolve(JSON.parse(data));
+        
+        try {
+          const jsonData = JSON.parse(data)
+
+          return resolve(jsonData);
+        } catch (e){
+          return resolve([]);
         }
+        
       });
     });
   }
