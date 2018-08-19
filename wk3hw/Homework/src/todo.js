@@ -63,7 +63,7 @@ class Todo {
         item.done = true;
       }
     });
-    this._save(todos);
+    return this._save(todos);
   }
 
   async markAsNotDone(id){
@@ -74,7 +74,7 @@ class Todo {
         item.done = false;
       }
     });
-    this._save(todos);
+    return this._save(todos);
   }
 
 
